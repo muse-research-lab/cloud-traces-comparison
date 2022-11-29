@@ -8,6 +8,7 @@ CommandInfo = namedtuple("CommandInfo", "module_path, class_name")
 commands_dict: Dict[str, CommandInfo] = {
     "download": CommandInfo("gtd.cli.download", "DownloadCommand"),
     "export": CommandInfo("gtd.cli.export", "ExportCommand"),
+    "ts": CommandInfo("gtd.cli.ts", "TsCommand"),
 }
 
 

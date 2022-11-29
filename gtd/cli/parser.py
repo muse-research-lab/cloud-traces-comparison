@@ -93,6 +93,68 @@ def add_export_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def add_ts_subparsers(parser: argparse.ArgumentParser) -> None:
+    subparsers = parser.add_subparsers(
+        title="available ts subcommands", dest="ts_cmd_name"
+    )
+
+    # Create parser for the "ts create" command
+    ts_create_parser = subparsers.add_parser(
+        "create", help="create time series csv files of instances"
+    )
+    add_ts_create_args(ts_create_parser)
+    add_db_connection_args_group(ts_create_parser)
+
+    # Create parser for the "ts export" command
+    ts_export_parser = subparsers.add_parser(
+        "export", help="export time series csv files to SQL database"
+    )
+    add_ts_export_args(ts_export_parser)
+    add_db_connection_args_group(ts_export_parser)
+
+
+def add_ts_create_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "table",
+        metavar="table",
+        type=str,
+        help=("name of the database table to read from"),
+    )
+
+    parser.add_argument(
+        "input",
+        metavar="input",
+        type=str,
+        help="""
+        input file that contains tuples
+        (collection_id, instance_index, upper_limit, lower_limit)
+        """,
+    )
+
+    parser.add_argument(
+        "output",
+        metavar="output",
+        type=str,
+        help="output dir to store the csv files",
+    )
+
+
+def add_ts_export_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "input",
+        metavar="input",
+        type=str,
+        help="input dir that contains time series files",
+    )
+
+    parser.add_argument(
+        "output",
+        metavar="output",
+        type=str,
+        help="output database table to store time series data",
+    )
+
+
 def add_db_connection_args_group(parser: argparse.ArgumentParser) -> None:
     db_connection_args = parser.add_argument_group(
         "database connection arguments"
@@ -160,6 +222,12 @@ def create_parser() -> argparse.ArgumentParser:
     )
     add_db_connection_args_group(export_parser)
     add_export_args(export_parser)
+
+    # Create parser for the "ts" command
+    ts_parser = subparsers.add_parser(
+        "ts", help="handle timeseries of instances (tasks + alloc instances)"
+    )
+    add_ts_subparsers(ts_parser)
 
     return parser
 
