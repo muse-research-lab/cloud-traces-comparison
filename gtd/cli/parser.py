@@ -112,6 +112,12 @@ def add_ts_subparsers(parser: argparse.ArgumentParser) -> None:
     add_ts_export_args(ts_export_parser)
     add_db_connection_args_group(ts_export_parser)
 
+    # Create parser for the "ts plot" command
+    ts_plot_parser = subparsers.add_parser(
+        "plot", help="plot time series csv files"
+    )
+    add_ts_plot_args(ts_plot_parser)
+
 
 def add_ts_create_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
@@ -152,6 +158,50 @@ def add_ts_export_args(parser: argparse.ArgumentParser) -> None:
         metavar="output",
         type=str,
         help="output database table to store time series data",
+    )
+
+
+def add_ts_plot_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "input",
+        metavar="input",
+        type=str,
+        help="input file or dir that contains time series files",
+    )
+
+    parser.add_argument(
+        "output",
+        metavar="output",
+        type=str,
+        help="output dir to store the created plots",
+    )
+
+    plot_conf_args = parser.add_argument_group("plot configuration arguments")
+
+    plot_conf_args.add_argument(
+        "-m",
+        dest="metrics",
+        metavar="METR",
+        nargs="+",
+        type=str,
+        required=True,
+        help="metrics (column names) to use in each plot",
+    )
+
+    plot_conf_args.add_argument(
+        "-i",
+        dest="interval",
+        metavar="INTERVAL",
+        type=int,
+        help="time interval (in hours) for created plots",
+    )
+
+    plot_conf_args.add_argument(
+        "-l",
+        dest="lim",
+        metavar="LIMIT",
+        type=float,
+        help="y axis limit for created plots",
     )
 
 
