@@ -43,14 +43,13 @@ def get_split_col_intervals(
             step_start = time
 
     if m >= step / 2:
-        k = k + 1
         intervals_len = len(lims)
     else:
         intervals_len = len(lims) - 1
 
     intervals: List[Tuple[int, Union[None, int]]] = []
     for i in range(intervals_len):
-        if i == k - 1:
+        if i == k:
             intervals.append((lims[i], None))
         else:
             intervals.append((lims[i], lims[i + 1]))

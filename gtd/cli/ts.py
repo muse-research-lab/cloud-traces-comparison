@@ -55,8 +55,11 @@ class TsCreateCommand(Command):
             df = pd.read_sql(q, con)
             sorted_df = df.sort_values("time", ascending=True)
 
+            if sorted_df.shape[0] == 0:
+                continue
+
             llim_ = int(llim)
-            ulim_ = int(ulim)
+            ulim_ = sorted_df.shape[0] if ulim == "None" else int(ulim)
             start_time = sorted_df.iloc[llim_]["time"]
             end_time = sorted_df.iloc[ulim_ - 1]["time"]
             file_name = f"{cid}-{idx}-{start_time}-{end_time}.csv"
