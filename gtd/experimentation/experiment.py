@@ -26,7 +26,7 @@ class Experiment:
         input_dir: str,
         metrics: List[str],
         comparison: str,
-        fraction: Optional[Tuple[int, int]],
+        fraction: Optional[Tuple[int, int]] = None,
     ):
         self._jobs = {
             job.id: job for job in self._read_experiment_input(input_dir)
