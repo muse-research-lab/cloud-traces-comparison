@@ -1,3 +1,4 @@
+import math
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -48,7 +49,7 @@ class L1Metric(Metric):
             L1Metric.calc_dist(x, y) for x, y in zip(data1[col], data2[col])
         ]
 
-        return sum(dists)
+        return sum(dists) / len(dists)
 
     @staticmethod
     def calc_dist(x: float, y: float) -> float:
@@ -76,7 +77,7 @@ class L2Metric(Metric):
             L2Metric.calc_dist(x, y) for x, y in zip(data1[col], data2[col])
         ]
 
-        return sum(dists)
+        return math.sqrt(sum(dists)) / len(dists)
 
     @staticmethod
     def calc_dist(x: float, y: float) -> float:
@@ -123,4 +124,4 @@ class SpectrumMetric(Metric):
             for x, y in zip(xl, yl):
                 total = total + abs(x - y) ** 2
 
-        return total
+        return math.sqrt(total)
