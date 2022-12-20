@@ -136,8 +136,12 @@ class Experiment:
     def _get_normalized_tasks(
         self, tasks: Iterator[Tuple[str, pd.DataFrame]]
     ) -> Iterator[Tuple[str, pd.DataFrame]]:
-        print("Continuing... [NotImplemented normalization function]")
-        return tasks
+        col = "avg_cpu_usage"
+        for uid, data in tasks:
+            data[col] = (data[col] - data[col].min()) / (
+                data[col].max() - data[col].min()
+            )
+            yield uid, data
 
     def _pick_random_fraction(self) -> Tuple[int, int]:
         min_len = self._find_min_task_len()
