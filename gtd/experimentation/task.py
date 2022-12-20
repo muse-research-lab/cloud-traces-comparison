@@ -36,6 +36,7 @@ class Task:
 
     def adjust_freq(self, col: str, freq: str) -> None:
         self.data = self.data.set_index(col)
+        self.data = self.data[~self.data.index.duplicated(keep="first")]
         self.data = self.data.asfreq(freq=freq, method="ffill")
 
     def pad_task(self, lim: int, copy: bool = True) -> pd.DataFrame:
