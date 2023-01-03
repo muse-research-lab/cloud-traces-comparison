@@ -29,6 +29,9 @@ class Metric(ABC):
 
 
 class L1Metric(Metric):
+    def __str__(self) -> str:
+        return "L1 = Sum(|x-y|) / Len()"
+
     @staticmethod
     def calc_metric(data: pd.DataFrame, col: str) -> float:
         raise NotImplementedError("This method is not supported")
@@ -57,6 +60,9 @@ class L1Metric(Metric):
 
 
 class L2Metric(Metric):
+    def __str__(self) -> str:
+        return "L2 = √(Sum(|x-y|^2)) / Len()"
+
     @staticmethod
     def calc_metric(data: pd.DataFrame, col: str) -> float:
         raise NotImplementedError("This method is not supported")
@@ -85,6 +91,9 @@ class L2Metric(Metric):
 
 
 class SpectrumMetric(Metric):
+    def __str__(self) -> str:
+        return "Spectrum = √(Sum(Sum(|a-b|^2)))"
+
     @staticmethod
     def calc_metric(data: pd.DataFrame, col: str) -> float:
         raise NotImplementedError("This method is not supported")
@@ -124,4 +133,5 @@ class SpectrumMetric(Metric):
             for x, y in zip(xl, yl):
                 total = total + abs(x - y) ** 2
 
+        # Normalize by row * column of matrices?
         return math.sqrt(total)
