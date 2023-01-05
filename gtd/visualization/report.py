@@ -240,11 +240,21 @@ def plot_single_report_spectrum(
     # Baseline task
     ax1 = fig.add_subplot(gs[0:2, 0:4])
 
-    ax1.plot(baseline_task_data.index, baseline_task_data["avg_cpu_usage"])
-    ax1.set_xlabel("Time")
-    ax1.set_ylabel("Average CPU usage (%)")
+    Fs = 1 / (5 * 60)
+    NFFT = min(baseline_task_data.shape[0], 72)
+    noverlap = round(NFFT / 2)
 
-    ax1.set_title("Baseline Task Time Series Data")
+    ax1.specgram(
+        baseline_task_data["avg_cpu_usage"],
+        NFFT=NFFT,
+        Fs=Fs,
+        noverlap=noverlap,
+        cmap="RdYlGn_r",
+    )
+    ax1.set_xlabel("Time")
+    ax1.set_ylabel("Frequency")
+
+    ax1.set_title("Baseline Task Spectrum Data")
 
     # Metadata
     ax2 = fig.add_subplot(gs[0:2, 4:6])

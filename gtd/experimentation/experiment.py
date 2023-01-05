@@ -28,6 +28,14 @@ class Experiment:
         "l1": "gtd.experimentation.metrics.L1Metric",
         "l2": "gtd.experimentation.metrics.L2Metric",
         "spectrum": "gtd.experimentation.metrics.SpectrumMetric",
+        "spectrummse": "gtd.experimentation.metrics.SpectrumMSEMetric",
+        "spectrumssim": "gtd.experimentation.metrics.SpectrumSSIMMetric",
+        "img100mse": "gtd.experimentation.metrics.Img100MSEMetric",
+        "img64mse": "gtd.experimentation.metrics.Img64MSEMetric",
+        "img128mse": "gtd.experimentation.metrics.Img128MSEMetric",
+        "img100ssim": "gtd.experimentation.metrics.Img100SSIMMetric",
+        "img64ssim": "gtd.experimentation.metrics.Img64SSIMMetric",
+        "img128ssim": "gtd.experimentation.metrics.Img128SSIMMetric",
     }
 
     def __init__(
@@ -74,6 +82,7 @@ class Experiment:
         metrics: List[str],
         sizing_type: str,
         fraction: Optional[Tuple[int, int]] = None,
+        fixed_comp_len: Optional[int] = None,
         normalize: bool = False,
     ) -> Dict[str, List[Result]]:
         processed_tasks = self._preprocess_tasks(
@@ -84,7 +93,12 @@ class Experiment:
         limit_len = sizing_type == "pad"
         results: Dict[str, List[Result]] = {}
         for metric in metrics:
-            res = self._compare_tasks(tasks_dict, metric, limit_len)
+            if sizing_type == "real":
+                res = self._compare_tasks_real(
+                    tasks_dict, metric, fixed_comp_len
+                )
+            else:
+                res = self._compare_tasks(tasks_dict, metric, limit_len)
             results[metric] = res
 
         return results
@@ -148,7 +162,7 @@ class Experiment:
 
         final_dir = f"{output_dir}{result.baseline_task.uid}/"
         os.makedirs(final_dir)
-        if metric == "spectrum":
+        if "spectrum" in metric:
             plot_baseline_spectrum(result, final_dir)
             plot_single_report_spectrum(
                 result,
@@ -199,6 +213,8 @@ class Experiment:
         elif sizing_type == "trim":
             min_len = self._find_min_task_len()
             tasks = self._get_trimmed_tasks(min_len)
+        elif sizing_type in ["full", "real"]:
+            tasks = self._get_full_tasks()
         else:
             raise ValueError(f"'{sizing_type}' is not a valid sizing type!")
 
@@ -269,6 +285,12 @@ class Experiment:
             data = task.get_fraction(0, lim)
             yield uid, data
 
+    def _get_full_tasks(self) -> Iterator[Tuple[str, pd.DataFrame]]:
+        for task in self.tasks:
+            uid = f"{task.job_id}-{task.idx}"
+            data = task.data
+            yield uid, data
+
     def _compare_tasks(
         self, tasks: Dict[str, pd.DataFrame], metric: str, limit_len: bool
     ) -> List[Result]:
@@ -303,6 +325,54 @@ class Experiment:
                 # TODO: Add argument for column instead of avg_cpu_usage
                 dist = metric_obj.compare(
                     baseline_task_data[:comparison_len],
+                    task_data[:comparison_len],
+                    "avg_cpu_usage",
+                )
+
+                compared_tasks.append(
+                    ResultTask(task_uid, task_data[:comparison_len], dist)
+                )
+
+            out.append(Result(baseline_task, compared_tasks))
+
+        return out
+
+    def _compare_tasks_real(
+        self,
+        tasks: Dict[str, pd.DataFrame],
+        metric: str,
+        fixed_comp_len: Optional[int] = None,
+    ) -> List[Result]:
+        cls = Experiment._get_metric_class(metric)
+        metric_obj = cls()
+
+        out: List[Result] = []
+
+        for baseline_task_uid, baseline_task_data in tasks.items():
+            baseline_job_id, baseline_task_idx = baseline_task_uid.split("-")
+            baseline_task = ResultTask(baseline_task_uid, baseline_task_data, 0)
+
+            compared_tasks: List[ResultTask] = []
+            for task_uid, task_data in tasks.items():
+                task_job_id, task_idx = task_uid.split("-")
+
+                task_len = task_data.shape[0]
+                random_len = (
+                    random.randint(100, task_len)
+                    if task_len > 100
+                    else task_len
+                )
+                comparison_len = fixed_comp_len or random_len
+
+                if (
+                    task_job_id == baseline_job_id
+                    and task_idx == baseline_task_idx
+                ):
+                    continue
+
+                # TODO: Add argument for column instead of avg_cpu_usage
+                dist = metric_obj.compare(
+                    baseline_task_data,
                     task_data[:comparison_len],
                     "avg_cpu_usage",
                 )
