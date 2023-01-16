@@ -36,6 +36,7 @@ class Experiment:
         "img100ssim": "gtd.experimentation.metrics.Img100SSIMMetric",
         "img64ssim": "gtd.experimentation.metrics.Img64SSIMMetric",
         "img128ssim": "gtd.experimentation.metrics.Img128SSIMMetric",
+        "dtwl2": "gtd.experimentation.metrics.DTWL2Metric",
     }
 
     def __init__(

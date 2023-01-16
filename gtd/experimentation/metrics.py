@@ -6,6 +6,7 @@ from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from fastdtw import fastdtw
 from matplotlib.mlab import specgram
 from PIL import Image
 from skimage.metrics import structural_similarity as ssim
@@ -377,3 +378,34 @@ class SpectrumSSIMMetric(SpectrumImgMetric):
 
         dist = SpectrumImgMetric.calc_dist(image1, image2, "ssim")
         return dist
+
+
+class DTWL2Metric(Metric):
+    def __str__(self) -> str:
+        return "DTW using L2 norm"
+
+    @staticmethod
+    def calc_metric(data: pd.DataFrame, col: str) -> float:
+        raise NotImplementedError("This method is not supported")
+
+    @staticmethod
+    def calc_list_metric(data: pd.DataFrame, col: str) -> List[float]:
+        raise NotImplementedError("This method is not supported")
+
+    @staticmethod
+    def calc_matrix_metric(data: pd.DataFrame, col: str) -> List[List[float]]:
+        raise NotImplementedError("This method is not supported")
+
+    @staticmethod
+    def compare(data1: pd.DataFrame, data2: pd.DataFrame, col: str) -> float:
+        x = data1[col].to_numpy()
+        y = data2[col].to_numpy()
+
+        dist: float = 0.0
+        dist, _ = fastdtw(x, y, dist=2)
+
+        return dist
+
+    @staticmethod
+    def calc_dist(x: float, y: float) -> float:
+        raise NotImplementedError("This method is not supported")
