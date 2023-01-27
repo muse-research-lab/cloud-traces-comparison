@@ -24,7 +24,9 @@ class TaskSlicer(TaskPreprocessor):
             llim, ulim = slice
             data = task.get_fraction_by_idx(0).data[llim:ulim].copy()
 
-            new_fractions[i] = Fraction(task_idx=task.idx, idx=i, data=data)
+            new_fractions[i] = Fraction(
+                job_id=task.job_id, task_idx=task.idx, idx=i, data=data
+            )
 
         task.fractions = new_fractions
 

@@ -13,6 +13,12 @@ class Job(BaseModel):
         task_idxs = self.get_task_idxs()
         return f"Job(id={self.id}, tasks={task_idxs})"
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Job):
+            return self.id == other.id
+
+        return False
+
     def get_task_by_idx(self, task_idx: int) -> Task:
         return self.tasks[task_idx]
 

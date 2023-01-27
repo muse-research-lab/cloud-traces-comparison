@@ -42,12 +42,14 @@ class InputReader(BaseModel, ABC):
                         fraction_idx = int(fraction_idx_str)
 
                         fractions[fraction_idx] = Fraction(
+                            job_id=job_id,
                             task_idx=task_idx,
                             idx=fraction_idx,
                             data=data,
                         )
                 else:
                     fractions[0] = Fraction(
+                        job_id=job_id,
                         task_idx=task_idx,
                         idx=0,
                         data=fractions_data,
