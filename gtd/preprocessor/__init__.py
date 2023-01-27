@@ -5,6 +5,7 @@ from .normalizer import TaskNormalizer
 from .outlier_handler import OutlierHandler
 from .padder import Padder
 from .slicer import TaskSlicer
+from .spectrum_creator import SpectrumCreator
 from .time_configurator import TimeConfigurator
 from .trimmer import Trimmer
 
@@ -14,6 +15,7 @@ __all__ = [
     "Cropper",
     "OutlierHandler",
     "Padder",
+    "SpectrumCreator",
     "TaskNormalizer",
     "TaskSlicer",
     "TimeConfigurator",
