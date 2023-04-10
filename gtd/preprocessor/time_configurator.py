@@ -11,21 +11,23 @@ class TimeConfigurator(TaskPreprocessor):
 
     def _run(self, task: Task) -> None:
         for fraction in task.get_fractions():
-            self._convert_ts_col(fraction.data)
-            self._adjust_freq(fraction.data)
+            fraction.data = self._convert_ts_col(fraction.data)
+            fraction.data = self._adjust_freq(fraction.data)
 
         return
 
-    def _convert_ts_col(self, data: pd.DataFrame) -> None:
+    def _convert_ts_col(self, data: pd.DataFrame) -> pd.DataFrame:
         data[self.time_col] = pd.to_datetime(
             data[self.time_col], unit=self.time_unit
         )
 
-        return
+        return data
 
-    def _adjust_freq(self, data: pd.DataFrame) -> None:
+    def _adjust_freq(self, data: pd.DataFrame) -> pd.DataFrame:
         data.set_index(self.time_col, inplace=True)
         data = data[~data.index.duplicated(keep="first")]
+        data = data.resample(self.freq).mean()
+        data = data.fillna(method="ffill")
         data = data.asfreq(freq=self.freq, method="ffill")
 
-        return
+        return data
