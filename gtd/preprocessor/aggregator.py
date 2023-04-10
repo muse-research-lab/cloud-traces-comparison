@@ -11,7 +11,7 @@ class FractionAggregator(FractionPreprocessor):
             fraction.data[self.col]
             .rolling(self.ts_to_px_ratio)
             .mean()
-            .loc[self.ts_to_px_ratio - 1 :: self.ts_to_px_ratio]
+            .iloc[self.ts_to_px_ratio - 1 :: self.ts_to_px_ratio]
         )
         fraction.data = fraction.data[fraction.data[self.col].notnull()]
 
