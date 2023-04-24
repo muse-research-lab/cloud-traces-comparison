@@ -36,6 +36,65 @@ Use the sample dataset of the provided [demo](docs/demo/).
 
 ### Read Input
 
+The tool accepts multiple input types such as CSV files or images and can easily
+be extended.
+
+The supported types can be found in the [input module](gtd/input/).
+
+```python
+from gtd.input import CsvFullReader
+
+inp = CsvFullReader(input_dir='./input', structured=True, columns=['time', 'avg_cpu_usage']).read_input()
+```
+
 ### Preprocess Data
 
+![Data Preprocessing](docs/images/data_preprocessing.png)
+
+After reading the input, the tools offers multiple data preprocessing and feature
+engineering steps such as normalization or image creation.
+
+The supported steps can be found in the [preprocessor module](gtd/preprocessor/).
+
+```python
+...
+from gtd.preprocessor import TaskNormalizer, FractionGADFCreator
+
+...
+normalized_tasks = TaskNormalizer(col='avg_cpu_usage').run(inp)
+img_fractions = FractionGADFCreator(col='avg_cpu_usage', image_size=256).run(normalized_tasks)
+```
+
 ### Compare Time Series
+
+![Time Series Comparison](docs/images/time_comparisons.png)
+
+Once you transform the input in the desired format you can use one of the available
+comparison methods for numeric data or images.
+
+The supported comparison methods can be found in the [comparator module](gtd/comparator/).
+
+```python
+...
+from gtd.comparator import (
+    L2ImageTaskFractionComparator,
+    SSIMImageTaskFractionComparator,
+)
+from gtd.internal import Output
+
+...
+out = Output()
+
+L2ImageTaskFractionComparator(name='l2').compare(img_fractions, out)
+SSIMImageTaskFractionComparator(name='ssim').compare(img_fractions, out)
+```
+
+## Demo
+
+For a complete example check out the demo notebooks under the [demo folder](docs/demo/)
+
+## License
+
+Copyright (c) 2023 Muse Lab. All rights reserved.
+
+Licensed under the MIT License.
