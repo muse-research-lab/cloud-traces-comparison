@@ -15,3 +15,14 @@ class ImageReader(InputReader):
         img: np.ndarray = cv2.imread(str(file), cv2.IMREAD_GRAYSCALE)
 
         return img
+
+
+class RGBImageReader(InputReader):
+    @property
+    def filetype(self) -> str:
+        return "png"
+
+    def _read_file(self, file: Path) -> np.ndarray:
+        img: np.ndarray = cv2.imread(str(file), cv2.IMREAD_COLOR)[..., ::-1]
+
+        return img

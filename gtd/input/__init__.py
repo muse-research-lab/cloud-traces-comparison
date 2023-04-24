@@ -1,3 +1,13 @@
-from .readers import CsvFullReader, ImageFractionReader, ImageFullReader
+from .readers import (
+    CsvFullReader,
+    ImageFractionReader,
+    ImageFullReader,
+    RGBImageFullReader,
+)
 
-__all__ = ["CsvFullReader", "ImageFractionReader", "ImageFullReader"]
+__all__ = [
+    "CsvFullReader",
+    "ImageFractionReader",
+    "ImageFullReader",
+    "RGBImageFullReader",
+]
