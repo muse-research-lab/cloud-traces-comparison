@@ -1,4 +1,4 @@
-# Time Series Comparison for Google's trace dataset (2019)
+# Time Series Comparison for Google's 2019 Trace Dataset
 
 This repository contains a collection of tools that allows to collect, manipulate
 and finally compare time series provided by Google's trace dataset (2019).
@@ -93,8 +93,13 @@ SSIMImageTaskFractionComparator(name='ssim').compare(img_fractions, out)
 
 For a complete example check out the demo notebooks under the [demo folder](docs/demo/)
 
-## License
+## Paper Reference
 
-Copyright (c) 2023 Muse Lab. All rights reserved.
+Georgia Christofidi, Konstantinos Papaioannou, and Thaleia Dimitra Doudali.
 
-Licensed under the MIT License.
+2023\. Toward Pattern-based Model Selection for Cloud Resource Forecasting.
+
+In 3rd Workshop on Machine Learning and Systems (EuroMLSys ’23), May 8, 2023, Rome,
+Italy.
+
+ACM, New York, NY, USA, 8 pages. <https://doi.org/10.1145/3578356.3592588>
