@@ -1,5 +1,7 @@
 # Time Series Comparison for Google's 2019 Trace Dataset
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This repository contains a collection of tools that allows to collect, manipulate
 and finally compare time series provided by Google's trace dataset (2019).
 
@@ -103,3 +105,7 @@ In 3rd Workshop on Machine Learning and Systems (EuroMLSys ’23), May 8, 2023, 
 Italy.
 
 ACM, New York, NY, USA, 8 pages. <https://doi.org/10.1145/3578356.3592588>
+
+## Acknowledgement
+This work is part of the grant FJC2021-047102-I, funded by MCIN/AEI/10.13039/501100011033 and the European Union «NextGenerationEU»/PRTR
+![Acknowledgement](docs/images/acknowledgement.png)
